@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">devtest</string>
+    <string name="employee_id">id</string>
+    <string name="employee_name">Name</string>
+    <string name="employee_age">Age</string>
+    <string name="employee_salary">Salary</string>
+    <string name="show_all_employees">Show All Employees</string>
+    <string name="submit">Submit</string>
+    <string name="employee_list">Employee List</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="success">Success</string>
+    <string name="error">Error</string>
+    <string name="ok">OK</string>
+    <string name="empty_input_error">The field cannot be empty</string>
+    <string name="numeric_input_error">Input only accept numeric character</string>
+    <string name="rooted_device_detected">You are running rooted device! hence you will quit the app</string>
+    <string name="delete_success">Deletion is success!</string>
+    <string name="update_success">Employee is updated!</string>
+    <string name="something_wrong">oops! something wrong!</string>
+    <string name="input_correctly">please fill the input correctly!</string>
+</resources>
