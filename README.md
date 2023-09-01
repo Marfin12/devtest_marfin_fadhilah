@@ -4,4 +4,5 @@ I am creating this project with following description knowledge below:
 - Using offline caching with network bound resource (test get all empployees without internet connectivity)
 - Using koin as dependency injection
 - Using coroutine to retrieve asynchronous data
+- Implementing Security(check rooted device, obsfucate code with proguard & encrpyt sqlLite with sqlChipper)
 - Unit test (viewmodel, utils, etc)
