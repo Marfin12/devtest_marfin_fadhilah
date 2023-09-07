@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import com.marfin_fadhilah.devtest.R
 import com.marfin_fadhilah.devtest.core.data.Resource
 import com.marfin_fadhilah.devtest.core.domain.model.Employee
@@ -46,6 +45,10 @@ class HomeFragment: Fragment() {
 
     private fun initComponent() {
         with(binding) {
+            edtName.post { edtName.error = null }
+            edtSalary.post { edtName.error = null }
+            edtAge.post { edtName.error = null }
+
             edtName.validateInput(
                 requireContext().resources.getString(R.string.empty_input_error)
             ) { text -> text.isNotEmpty() }
