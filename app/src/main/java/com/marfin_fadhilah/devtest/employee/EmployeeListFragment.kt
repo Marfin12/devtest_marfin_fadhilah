@@ -51,6 +51,7 @@ class EmployeeListFragment: Fragment() {
         if (activity != null) {
             initObserve()
             initComponent()
+            employeeListViewModel.refreshEmployee()
         }
     }
 
@@ -59,7 +60,7 @@ class EmployeeListFragment: Fragment() {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
 
-            employeeAdapter.onEditClick = { employee ->
+            employeeAdapter.onUpdateClick = { employee ->
                 employeeListViewModel.updateEmployee(employee)
             }
 
@@ -85,6 +86,7 @@ class EmployeeListFragment: Fragment() {
                         binding.viewError.root.visibility = View.VISIBLE
                         binding.viewError.tvError.text =
                             employee.message ?: getString(R.string.something_wrong)
+                        employeeAdapter.setData(listOf())
                     }
                 }
             }
@@ -109,9 +111,7 @@ class EmployeeListFragment: Fragment() {
                         AlertDialog.Builder(requireContext())
                             .setTitle(R.string.something_wrong)
                             .setMessage(response.message)
-                            .setPositiveButton(R.string.ok) { _, _ ->
-                                employeeListViewModel.refreshEmployee()
-                            }
+                            .setPositiveButton(R.string.ok) { _, _ -> }
                             .create()
                             .show()
                         binding.progressBar.visibility = View.GONE
@@ -120,7 +120,7 @@ class EmployeeListFragment: Fragment() {
             }
         }
 
-        employeeListViewModel.editResult.observe(viewLifecycleOwner) { response ->
+        employeeListViewModel.deleteResult.observe(viewLifecycleOwner) { response ->
             if (response != null) {
                 when (response) {
                     is Resource.Loading -> binding.progressBar.visibility = View.VISIBLE
@@ -139,9 +139,7 @@ class EmployeeListFragment: Fragment() {
                         AlertDialog.Builder(requireContext())
                             .setTitle(R.string.something_wrong)
                             .setMessage(response.message)
-                            .setPositiveButton(R.string.ok) { _, _ ->
-                                employeeListViewModel.refreshEmployee()
-                            }
+                            .setPositiveButton(R.string.ok) { _, _ -> }
                             .create()
                             .show()
                         binding.progressBar.visibility = View.GONE

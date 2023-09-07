@@ -4,13 +4,14 @@ import com.marfin_fadhilah.devtest.core.utils.Utils.isContainFile
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.nio.file.Paths
 
 
 class UtilsTest {
 
     @Test
     fun testIsDeviceRooted_WithExistingFile() {
-        val filename1 = javaClass.getResource("com.example.deleted.SecurityUtilsTest.class")?.file
+        val filename1 = "/Users/bnc/Public/devtest/app"
         val filename2 = "/path/to/non_existing_file"
 
         assertTrue(isContainFile(filename1 ?: "", filename2))
@@ -35,4 +36,3 @@ class UtilsTest {
         assertFalse(isContainFile())
     }
 }
-

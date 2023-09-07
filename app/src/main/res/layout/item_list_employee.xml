@@ -16,45 +16,33 @@
         app:layout_constraintTop_toTopOf="parent"
         >
 
-        <TextView
-            android:id="@+id/tv_item_id"
+        <com.marfin_fadhilah.devtest.core.ui.EmployeeInfoEditText
+            android:id="@+id/info_item_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:text="@string/employee_id"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_item_image"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:label="@string/employee_id"
+            />
 
-        <TextView
-            android:id="@+id/tv_item_name"
+        <com.marfin_fadhilah.devtest.core.ui.EmployeeInfoEditText
+            android:id="@+id/info_item_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:text="@string/employee_name"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_item_image"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:label="@string/employee_name"
+            />
 
-        <TextView
-            android:id="@+id/tv_item_salary"
+        <com.marfin_fadhilah.devtest.core.ui.EmployeeInfoEditText
+            android:id="@+id/info_item_salary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:text="@string/employee_salary"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_item_image"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:label="@string/employee_salary"
+            />
 
-        <TextView
-            android:id="@+id/tv_item_age"
+        <com.marfin_fadhilah.devtest.core.ui.EmployeeInfoEditText
+            android:id="@+id/info_item_age"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:text="@string/employee_age"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_item_image"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:label="@string/employee_age"
+            />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat

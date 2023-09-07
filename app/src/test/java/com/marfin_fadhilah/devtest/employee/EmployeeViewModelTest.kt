@@ -9,6 +9,7 @@ import com.marfin_fadhilah.devtest.core.data.source.remote.response.EmployeeCall
 import com.marfin_fadhilah.devtest.core.data.source.remote.response.EmployeeListResponse
 import com.marfin_fadhilah.devtest.core.data.source.remote.response.EmployeeResponse
 import com.marfin_fadhilah.devtest.core.domain.model.Employee
+import com.marfin_fadhilah.devtest.core.domain.usecase.EmployeeInteraction
 import com.marfin_fadhilah.devtest.core.domain.usecase.EmployeeUseCase
 import com.marfin_fadhilah.devtest.utils.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,6 +24,7 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 
+
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class EmployeeViewModelTest {
@@ -32,45 +34,38 @@ class EmployeeViewModelTest {
     @Mock
     private lateinit var employeeRepository: EmployeeRepository
 
-    @Mock
-    private lateinit var employeeUseCase: EmployeeUseCase
-
     private lateinit var employeeListViewModel: EmployeeListViewModel
 
-    val dummyEmployee = Employee(
+    private val dummyEmployee = Employee(
         DataDummy.dummyId, DataDummy.dummyName, DataDummy.dummySalary, DataDummy.dummyAge
     )
 
     @Before
     fun setUp() {
-        employeeListViewModel = EmployeeListViewModel(employeeUseCase)
+        employeeListViewModel = EmployeeListViewModel(EmployeeInteraction(employeeRepository))
     }
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
     @Test
-    fun `when fetch employee success`() = runTest {
+    fun `when fetch employee success should return success and retrieve correct data`() = runTest {
         val expectedResponse = flowOf(
             Resource.Success(
-                data = listOf(
-                    Employee(
-                        dummyEmployee.id ?: -1,
-                        dummyEmployee.name,
-                        dummyEmployee.salary,
-                        dummyEmployee.age
-                    )
-                ),
+                data = listOf(dummyEmployee, dummyEmployee),
             )
         )
 
-        Mockito.`when`(employeeRepository.getAllEmployee())
-            .thenReturn(expectedResponse)
+        Mockito.`when`(employeeRepository.getAllEmployee()).thenReturn(expectedResponse)
+
+        employeeListViewModel.refreshEmployee()
 
         val status = employeeListViewModel.employee.getOrAwaitValue()
+        val data = status.data ?: listOf()
 
-        Assert.assertTrue(status == expectedResponse)
-        Assert.assertFalse(status.data.isNullOrEmpty())
+        Assert.assertTrue(status is Resource.Success)
+        Assert.assertTrue(data.isNotEmpty())
+        Assert.assertTrue(data[0].name == dummyEmployee.name)
     }
 
     @Test
@@ -85,14 +80,14 @@ class EmployeeViewModelTest {
                 )
             )
 
-            Mockito.`when`(employeeRepository.postEmployee(dummyEmployee))
+            Mockito.`when`(employeeRepository.deleteEmployee(dummyEmployee))
                 .thenReturn(expectedResponse)
 
             employeeListViewModel.deleteEmployee(dummyEmployee)
 
             val status = employeeListViewModel.deleteResult.getOrAwaitValue()
 
-            Assert.assertTrue(status == expectedResponse)
+            Assert.assertTrue(status is Resource.Success)
             Assert.assertTrue(status.data?.status == "success")
         }
 
@@ -105,14 +100,14 @@ class EmployeeViewModelTest {
             )
         )
 
-        Mockito.`when`(employeeRepository.postEmployee(dummyEmployee))
+        Mockito.`when`(employeeRepository.deleteEmployee(dummyEmployee))
             .thenReturn(expectedResponse)
 
         employeeListViewModel.deleteEmployee(dummyEmployee)
 
         val status = employeeListViewModel.deleteResult.getOrAwaitValue()
 
-        Assert.assertTrue(status == expectedResponse)
-        Assert.assertFalse(status.data?.message.isNullOrEmpty())
+        Assert.assertTrue(status is Resource.Error)
+        Assert.assertTrue(status.data?.status == "")
     }
 }

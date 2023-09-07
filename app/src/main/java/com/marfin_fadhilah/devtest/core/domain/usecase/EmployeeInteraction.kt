@@ -7,7 +7,7 @@ import com.marfin_fadhilah.devtest.core.domain.repository.IEmployeeRepository
 class EmployeeInteraction(private val employeeRepository: IEmployeeRepository): EmployeeUseCase {
     override fun getAllEmployee() = employeeRepository.getAllEmployee()
 
-    override fun postEmployee(employee: Employee) = employeeRepository.postEmployee(employee)
+    override suspend fun postEmployee(employee: Employee) = employeeRepository.postEmployee(employee)
 
     override fun deleteEmployee(employee: Employee) = employeeRepository.deleteEmployee(employee)
 

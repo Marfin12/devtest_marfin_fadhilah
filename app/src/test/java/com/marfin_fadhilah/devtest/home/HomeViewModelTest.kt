@@ -7,10 +7,12 @@ import com.marfin_fadhilah.devtest.core.data.EmployeeRepository
 import com.marfin_fadhilah.devtest.core.data.Resource
 import com.marfin_fadhilah.devtest.core.data.source.remote.response.EmployeeCallResponse
 import com.marfin_fadhilah.devtest.core.domain.model.Employee
+import com.marfin_fadhilah.devtest.core.domain.usecase.EmployeeInteraction
 import com.marfin_fadhilah.devtest.core.domain.usecase.EmployeeUseCase
 import com.marfin_fadhilah.devtest.utils.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
@@ -19,6 +21,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.Mockito.`when`
+import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
 
 @ExperimentalCoroutinesApi
@@ -30,18 +34,15 @@ class HomeViewModelTest {
     @Mock
     private lateinit var employeeRepository: EmployeeRepository
 
-    @Mock
-    private lateinit var employeeUseCase: EmployeeUseCase
-
     private lateinit var homeViewModel: HomeViewModel
 
-    val dummyEmployee = Employee(
+    private val dummyEmployee = Employee(
         DataDummy.dummyId, DataDummy.dummyName, DataDummy.dummySalary, DataDummy.dummyAge
     )
 
     @Before
     fun setUp() {
-        homeViewModel = HomeViewModel(employeeUseCase)
+        homeViewModel = HomeViewModel(EmployeeInteraction(employeeRepository))
     }
 
     @get:Rule
@@ -54,14 +55,14 @@ class HomeViewModelTest {
             ""
         )))
 
-        Mockito.`when`(employeeRepository.postEmployee(dummyEmployee))
+        `when`(employeeRepository.postEmployee(dummyEmployee))
             .thenReturn(expectedResponse)
 
         homeViewModel.postEmployee(dummyEmployee)
 
         val status = homeViewModel.postResult.getOrAwaitValue()
 
-        Assert.assertTrue(status == expectedResponse)
+        Assert.assertTrue(status is Resource.Success)
         Assert.assertTrue(status.data?.status == "success")
     }
 
@@ -71,14 +72,14 @@ class HomeViewModelTest {
             message = "some error message"
         ))
 
-        Mockito.`when`(employeeRepository.postEmployee(dummyEmployee))
+        `when`(employeeRepository.postEmployee(dummyEmployee))
             .thenReturn(expectedResponse)
 
         homeViewModel.postEmployee(dummyEmployee)
 
         val status = homeViewModel.postResult.getOrAwaitValue()
 
-        Assert.assertTrue(status == expectedResponse)
-        Assert.assertFalse(status.data?.message.isNullOrEmpty())
+        Assert.assertTrue(status is Resource.Error)
+        Assert.assertTrue(status.data?.status == "")
     }
 }

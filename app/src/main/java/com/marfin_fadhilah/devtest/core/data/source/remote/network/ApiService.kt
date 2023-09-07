@@ -2,6 +2,7 @@ package com.marfin_fadhilah.devtest.core.data.source.remote.network
 
 import com.marfin_fadhilah.devtest.core.data.source.remote.response.EmployeeCallResponse
 import com.marfin_fadhilah.devtest.core.data.source.remote.response.EmployeeListResponse
+import com.marfin_fadhilah.devtest.core.domain.model.Employee
 import retrofit2.http.*
 
 
@@ -23,8 +24,6 @@ interface ApiService {
     @PUT("put/{id}")
     suspend fun updateEmployee(
         @Path("id") id: String,
-        @Field("name") name: String,
-        @Field("salary") salary: String,
-        @Field("age") age: String
+        @Body employee: Employee
     ): EmployeeCallResponse
 }

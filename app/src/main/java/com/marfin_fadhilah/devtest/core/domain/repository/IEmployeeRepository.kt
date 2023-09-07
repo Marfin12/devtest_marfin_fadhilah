@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface IEmployeeRepository {
     fun getAllEmployee(): Flow<Resource<List<Employee>>>
-    fun postEmployee(employee: Employee): Flow<Resource<EmployeeCallResponse>>
+    suspend fun postEmployee(employee: Employee): Flow<Resource<EmployeeCallResponse>>
     fun deleteEmployee(employee: Employee): Flow<Resource<EmployeeCallResponse>>
     fun updateEmployee(employee: Employee): Flow<Resource<EmployeeCallResponse>>
 }

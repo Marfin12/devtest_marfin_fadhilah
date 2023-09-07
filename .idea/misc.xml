@@ -9,6 +9,7 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/app_bar_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/employee_info_edittext.xml" value="0.62113037109375" />
         <entry key="app/src/main/res/layout/employee_list_fragment.xml" value="0.1" />
         <entry key="app/src/main/res/layout/home_fragment.xml" value="0.23852386474609377" />
         <entry key="app/src/main/res/layout/item_list_employee.xml" value="0.1" />

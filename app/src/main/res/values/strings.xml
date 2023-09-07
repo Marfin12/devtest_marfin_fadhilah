@@ -8,6 +8,8 @@
     <string name="submit">Submit</string>
     <string name="employee_list">Employee List</string>
     <string name="edit">Edit</string>
+    <string name="update">Update</string>
+    <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
     <string name="success">Success</string>
     <string name="error">Error</string>
@@ -15,6 +17,7 @@
     <string name="empty_input_error">The field cannot be empty</string>
     <string name="numeric_input_error">Input only accept numeric character</string>
     <string name="rooted_device_detected">You are running rooted device! hence you will quit the app</string>
+    <string name="post_success">New employee successfully added!</string>
     <string name="delete_success">Deletion is success!</string>
     <string name="update_success">Employee is updated!</string>
     <string name="something_wrong">oops! something wrong!</string>

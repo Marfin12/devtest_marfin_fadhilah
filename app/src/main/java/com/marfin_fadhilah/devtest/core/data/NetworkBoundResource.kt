@@ -5,6 +5,8 @@ import kotlinx.coroutines.flow.*
 
 abstract class NetworkBoundResource<ResultType, RequestType> {
 
+    open var getSaveCallResult : Flow<RequestType>? = null
+
     private var result: Flow<Resource<ResultType>> = flow {
         emit(Resource.Loading())
         val dbSource = loadFromDB().first()
@@ -12,6 +14,7 @@ abstract class NetworkBoundResource<ResultType, RequestType> {
             emit(Resource.Loading())
             when (val apiResponse = createCall().first()) {
                 is ApiResponse.Success -> {
+                    getSaveCallResult = flowOf(apiResponse.data)
                     saveCallResult(apiResponse.data)
                     emitAll(loadFromDB().map { Resource.Success(it) })
                 }

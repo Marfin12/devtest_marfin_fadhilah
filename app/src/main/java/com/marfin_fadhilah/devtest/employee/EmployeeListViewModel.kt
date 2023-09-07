@@ -1,33 +1,44 @@
 package com.marfin_fadhilah.devtest.employee
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.*
 import com.marfin_fadhilah.devtest.core.data.Resource
 import com.marfin_fadhilah.devtest.core.data.source.remote.response.EmployeeCallResponse
 import com.marfin_fadhilah.devtest.core.domain.model.Employee
 import com.marfin_fadhilah.devtest.core.domain.usecase.EmployeeUseCase
+import kotlinx.coroutines.launch
 
 
 class EmployeeListViewModel(private val employeeUseCase: EmployeeUseCase) : ViewModel() {
     private val _editResult = MutableLiveData<Resource<EmployeeCallResponse>>()
-    var editResult: LiveData<Resource<EmployeeCallResponse>> = _editResult
+    var editResult: MutableLiveData<Resource<EmployeeCallResponse>> = _editResult
 
     private val _deleteResult = MutableLiveData<Resource<EmployeeCallResponse>>()
-    var deleteResult: LiveData<Resource<EmployeeCallResponse>> = _deleteResult
+    var deleteResult: MutableLiveData<Resource<EmployeeCallResponse>> = _deleteResult
 
-    var employee = employeeUseCase.getAllEmployee().asLiveData()
+    private val _employee = MutableLiveData<Resource<List<Employee>>>()
+    var employee = _employee
 
     fun refreshEmployee() {
-        employee = employeeUseCase.getAllEmployee().asLiveData()
+        viewModelScope.launch {
+            employeeUseCase.getAllEmployee().collect { resource ->
+                _employee.value = resource
+            }
+        }
     }
 
     fun deleteEmployee(employee: Employee) {
-        deleteResult = employeeUseCase.deleteEmployee(employee).asLiveData()
+        viewModelScope.launch {
+            employeeUseCase.deleteEmployee(employee).collect { resource ->
+                _deleteResult.value = resource
+            }
+        }
     }
 
     fun updateEmployee(employee: Employee) {
-        editResult = employeeUseCase.updateEmployee(employee).asLiveData()
+        viewModelScope.launch {
+            employeeUseCase.updateEmployee(employee).collect { resource ->
+                _editResult.value = resource
+            }
+        }
     }
 }

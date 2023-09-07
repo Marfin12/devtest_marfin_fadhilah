@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.nav_host_fragment, HomeFragment())
+                .addToBackStack(null)
                 .commit()
             supportActionBar?.title = getString(R.string.app_name)
         }

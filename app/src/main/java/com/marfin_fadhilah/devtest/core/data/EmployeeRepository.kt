@@ -8,9 +8,7 @@ import com.marfin_fadhilah.devtest.core.data.source.remote.response.EmployeeResp
 import com.marfin_fadhilah.devtest.core.domain.model.Employee
 import com.marfin_fadhilah.devtest.core.domain.repository.IEmployeeRepository
 import com.marfin_fadhilah.devtest.core.utils.DataMapper
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import java.util.concurrent.Executors
 
 
@@ -28,7 +26,7 @@ class EmployeeRepository constructor(
             }
 
             override fun shouldFetch(data: List<Employee>?): Boolean =
-                true
+                data.isNullOrEmpty()
 
             override suspend fun createCall(): Flow<ApiResponse<List<EmployeeResponse>>> =
                 remoteDataSource.getAllEmployee()
@@ -39,27 +37,14 @@ class EmployeeRepository constructor(
             }
         }.asFlow()
 
-    override fun postEmployee(employee: Employee): Flow<Resource<EmployeeCallResponse>> =
-        object : NetworkBoundResource<EmployeeCallResponse, EmployeeCallResponse>() {
-
-            override fun loadFromDB(): Flow<EmployeeCallResponse> {
-                return flowOf(EmployeeCallResponse())
-            }
-
-            override fun shouldFetch(data: EmployeeCallResponse?): Boolean =
-                true
-
-            override suspend fun createCall(): Flow<ApiResponse<EmployeeCallResponse>> =
-                remoteDataSource.postEmployee(employee)
-
-            override suspend fun saveCallResult(data: EmployeeCallResponse) {}
-        }.asFlow()
+    override suspend fun postEmployee(employee: Employee): Flow<Resource<EmployeeCallResponse>> =
+        remoteDataSource.postEmployee(employee)
 
     override fun deleteEmployee(employee: Employee): Flow<Resource<EmployeeCallResponse>> =
         object : NetworkBoundResource<EmployeeCallResponse, EmployeeCallResponse>() {
 
             override fun loadFromDB(): Flow<EmployeeCallResponse> {
-                return flowOf(EmployeeCallResponse())
+                return getSaveCallResult ?: flowOf(EmployeeCallResponse())
             }
 
             override fun shouldFetch(data: EmployeeCallResponse?): Boolean =
@@ -80,14 +65,14 @@ class EmployeeRepository constructor(
         object : NetworkBoundResource<EmployeeCallResponse, EmployeeCallResponse>() {
 
             override fun loadFromDB(): Flow<EmployeeCallResponse> {
-                return flowOf(EmployeeCallResponse())
+                return getSaveCallResult ?: flowOf(EmployeeCallResponse())
             }
 
             override fun shouldFetch(data: EmployeeCallResponse?): Boolean =
                 true
 
             override suspend fun createCall(): Flow<ApiResponse<EmployeeCallResponse>> =
-                remoteDataSource.deleteEmployee(employee.id.toString())
+                remoteDataSource.updateEmployee(employee)
 
             override suspend fun saveCallResult(data: EmployeeCallResponse) {
                 val employeeEntity = DataMapper.mapDomainToEntity(employee)

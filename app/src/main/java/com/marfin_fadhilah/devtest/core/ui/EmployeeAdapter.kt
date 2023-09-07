@@ -8,13 +8,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.marfin_fadhilah.devtest.R
 import com.marfin_fadhilah.devtest.core.domain.model.Employee
 import com.marfin_fadhilah.devtest.databinding.ItemListEmployeeBinding
+import kotlinx.android.synthetic.main.employee_info_edittext.view.*
 import java.util.ArrayList
+
 
 @SuppressLint("SetTextI18n")
 class EmployeeAdapter : RecyclerView.Adapter<EmployeeAdapter.ListViewHolder>() {
 
     private var listData = ArrayList<Employee>()
-    var onEditClick: ((Employee) -> Unit)? = null
+    var onUpdateClick: ((Employee) -> Unit)? = null
     var onDeleteClick: ((Employee) -> Unit)? = null
 
     @SuppressLint("NotifyDataSetChanged")
@@ -26,7 +28,9 @@ class EmployeeAdapter : RecyclerView.Adapter<EmployeeAdapter.ListViewHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        ListViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_list_employee, parent, false))
+        ListViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.item_list_employee, parent, false)
+        )
 
     override fun getItemCount() = listData.size
 
@@ -46,19 +50,70 @@ class EmployeeAdapter : RecyclerView.Adapter<EmployeeAdapter.ListViewHolder>() {
 
         fun bind(data: Employee) {
             with(binding) {
-                tvItemId.text = "$id: ${data.id}"
-                tvItemName.text = "$name: ${data.name}"
-                tvItemSalary.text = "$salary: ${data.salary}"
-                tvItemAge.text = "$age: ${data.age}"
+                infoItemId.setLabelAndValue("$id:", "${data.id}")
+                infoItemName.setLabelAndValue("$name:", data.name)
+                infoItemSalary.setLabelAndValue("$salary:", "${data.salary}")
+                infoItemAge.setLabelAndValue("$age:", "${data.age}")
             }
         }
 
         init {
             binding.btnEdit.setOnClickListener {
-                onEditClick?.invoke(listData[adapterPosition])
+                switchToEditMode()
             }
             binding.btnDelete.setOnClickListener {
                 onDeleteClick?.invoke(listData[adapterPosition])
+            }
+        }
+
+        private fun switchToEditMode() {
+            with(binding) {
+                btnEdit.text = context.getString(R.string.update)
+                btnDelete.text = context.getString(R.string.cancel)
+
+                setEnableEditText(true)
+
+                btnEdit.setOnClickListener {
+                    if (onUpdateClick != null) {
+                        onUpdateClick?.invoke(
+                            Employee(
+                                infoItemId.value.toInt(),
+                                infoItemName.value,
+                                infoItemSalary.value.toInt(),
+                                infoItemAge.value.toInt()
+                            )
+                        )
+                        switchToViewOnly()
+                    }
+                }
+                btnDelete.setOnClickListener {
+                    switchToViewOnly()
+                }
+            }
+        }
+
+        private fun switchToViewOnly() {
+            with(binding) {
+                btnEdit.text = context.getString(R.string.edit)
+                btnDelete.text = context.getString(R.string.delete)
+
+                setEnableEditText(false)
+
+                btnEdit.setOnClickListener {
+                    switchToEditMode()
+                }
+                btnDelete.setOnClickListener {
+                    onDeleteClick?.invoke(listData[adapterPosition])
+                }
+            }
+        }
+
+        private fun setEnableEditText(isEnable: Boolean) {
+            with(binding) {
+                infoItemId.setEnable(isEnable)
+                infoItemName.setEnable(isEnable)
+                infoItemAge.setEnable(isEnable)
+                infoItemSalary.setEnable(isEnable)
             }
         }
     }

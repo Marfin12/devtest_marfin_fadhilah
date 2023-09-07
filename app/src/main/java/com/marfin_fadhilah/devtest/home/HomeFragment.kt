@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.marfin_fadhilah.devtest.R
 import com.marfin_fadhilah.devtest.core.data.Resource
 import com.marfin_fadhilah.devtest.core.domain.model.Employee
@@ -58,7 +59,7 @@ class HomeFragment: Fragment() {
             ) { text -> TextUtils.isDigitsOnly(text) }
 
             btnEmployeeList.setOnClickListener {
-                EmployeeListFragment.launch(requireActivity().supportFragmentManager)
+                EmployeeListFragment.launch(parentFragmentManager)
             }
 
             btnSubmit.setOnClickListener {
@@ -92,7 +93,7 @@ class HomeFragment: Fragment() {
                     is Resource.Success -> {
                         AlertDialog.Builder(requireContext())
                             .setTitle(R.string.success)
-                            .setMessage(R.string.delete_success)
+                            .setMessage(R.string.post_success)
                             .setPositiveButton(R.string.ok) { _, _ -> }
                             .create()
                             .show()
@@ -121,4 +122,9 @@ class HomeFragment: Fragment() {
         (binding.edtName.text.isNotEmpty()
                 && binding.edtSalary.text.isNotEmpty()
                 && binding.edtAge.text.isNotEmpty())
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        homeViewModel.postResult.postValue(null)
+    }
 }

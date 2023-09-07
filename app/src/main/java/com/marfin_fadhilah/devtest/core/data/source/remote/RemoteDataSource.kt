@@ -1,6 +1,7 @@
 package com.marfin_fadhilah.devtest.core.data.source.remote
 
 import android.util.Log
+import com.marfin_fadhilah.devtest.core.data.Resource
 import com.marfin_fadhilah.devtest.core.data.source.remote.network.ApiResponse
 import com.marfin_fadhilah.devtest.core.data.source.remote.network.ApiService
 import com.marfin_fadhilah.devtest.core.data.source.remote.response.EmployeeCallResponse
@@ -30,8 +31,9 @@ class RemoteDataSource constructor(private val apiService: ApiService) {
         }.flowOn(Dispatchers.IO)
     }
 
-    suspend fun postEmployee(employee: Employee): Flow<ApiResponse<EmployeeCallResponse>> {
+    suspend fun postEmployee(employee: Employee): Flow<Resource<EmployeeCallResponse>> {
         return flow {
+            emit(Resource.Loading())
             try {
                 val response = apiService.postEmployee(
                     employee.name,
@@ -40,13 +42,13 @@ class RemoteDataSource constructor(private val apiService: ApiService) {
                 )
                 val status = response.status
                 if (status.isNotEmpty()){
-                    emit(ApiResponse.Success(response))
+                    emit(Resource.Success(response))
                 }
                 else {
-                    emit(ApiResponse.Empty)
+                    emit(Resource.Success(EmployeeCallResponse()))
                 }
             } catch (e : Exception){
-                emit(ApiResponse.Error(e.toString()))
+                emit(Resource.Error(e.toString()))
                 Log.e("RemoteDataSource", e.toString())
             }
         }.flowOn(Dispatchers.IO)
@@ -73,12 +75,7 @@ class RemoteDataSource constructor(private val apiService: ApiService) {
     suspend fun updateEmployee(employee: Employee): Flow<ApiResponse<EmployeeCallResponse>> {
         return flow {
             try {
-                val response = apiService.updateEmployee(
-                    employee.id.toString(),
-                    employee.name,
-                    employee.salary.toString(),
-                    employee.age.toString()
-                )
+                val response = apiService.updateEmployee(employee.id.toString(), employee)
                 val status = response.status
                 if (status.isNotEmpty()){
                     emit(ApiResponse.Success(response))
